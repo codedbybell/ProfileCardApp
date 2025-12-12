@@ -5,8 +5,9 @@ import { COLORS, SPACING, RADII, FONTS } from '../theme';
 
 export default function ProfileScreen() {
     const [theme, setTheme] = useState('light');
-    const currentTheme = COLORS[theme];
+    const [isFollowing, setIsFollowing] = useState(false);
 
+    const currentTheme = COLORS[theme];
     const { width } = useWindowDimensions();
     const isLargeScreen = width > 500;
 
@@ -47,6 +48,26 @@ export default function ProfileScreen() {
                 <Text style={[styles.role, { color: currentTheme.text }]}>
                     Mobile Developer
                 </Text>
+
+                <Pressable
+                    style={[
+                        styles.followButton,
+                        {
+                            // Takip ediliyorsa çerçeveli (outline), edilmiyorsa mavi dolu buton
+                            backgroundColor: isFollowing ? 'transparent' : '#2196F3',
+                            borderColor: isFollowing ? currentTheme.text : 'transparent',
+                            borderWidth: isFollowing ? 2 : 0,
+                        }
+                    ]}
+                    onPress={() => setIsFollowing(!isFollowing)}
+                >
+                    <Text style={[
+                        styles.followText,
+                        { color: isFollowing ? currentTheme.text : '#FFF' }
+                    ]}>
+                        {isFollowing ? 'Following' : 'Follow'}
+                    </Text>
+                </Pressable>
 
                 <Pressable
                     style={({ pressed }) => [
@@ -95,6 +116,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: SPACING.sm,
         opacity: 0.7,
+    },
+    followButton: {
+        marginTop: SPACING.lg,
+        paddingVertical: 10,
+        paddingHorizontal: 40,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        minWidth: 150,
+    },
+    followText: {
+        fontFamily: FONTS.bold,
+        fontSize: 16,
     },
     likeButton: {
         flexDirection: 'row',
