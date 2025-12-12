@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADII, FONTS } from '../theme';
@@ -7,23 +7,44 @@ export default function ProfileScreen() {
     const [theme, setTheme] = useState('light');
     const currentTheme = COLORS[theme];
 
+    const toggleTheme = () => {
+        setTheme(theme === 'light' ? 'dark' : 'light');
+    };
+
     return (
         <View style={[styles.container, { backgroundColor: currentTheme.bg }]}>
-            <View style={[styles.card, { backgroundColor: currentTheme.card }]}>
 
+            <Pressable onPress={toggleTheme} style={styles.themeToggle}>
+                <Ionicons
+                    name={theme === 'light' ? 'moon' : 'sunny'}
+                    size={28}
+                    color={currentTheme.text}
+                />
+            </Pressable>
+
+            <View style={[styles.card, { backgroundColor: currentTheme.card }]}>
                 <Ionicons
                     name="person-circle-outline"
                     size={80}
                     color={currentTheme.text}
                 />
-
                 <Text style={[styles.name, { color: currentTheme.text }]}>
                     Berra Turan
                 </Text>
-
                 <Text style={[styles.role, { color: currentTheme.text }]}>
                     Mobile Developer
                 </Text>
+
+                <Pressable
+                    style={({ pressed }) => [
+                        styles.likeButton,
+                        { backgroundColor: pressed ? '#e63946' : '#ff6b6b' }
+                    ]}
+                    onPress={() => console.log('Profile Liked!')}
+                >
+                    <Ionicons name="heart" size={24} color="#fff" />
+                    <Text style={styles.likeText}>Like</Text>
+                </Pressable>
 
             </View>
         </View>
@@ -35,6 +56,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    themeToggle: {
+        position: 'absolute',
+        top: 50,
+        right: 20,
+        padding: SPACING.sm,
     },
     card: {
         width: '85%',
@@ -57,5 +84,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: SPACING.sm,
         opacity: 0.7,
+    },
+    likeButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: SPACING.sm,
+        paddingHorizontal: SPACING.lg,
+        borderRadius: 50,
+        marginTop: SPACING.md,
+    },
+    likeText: {
+        color: '#fff',
+        fontFamily: FONTS.bold,
+        fontSize: 16,
+        marginLeft: SPACING.sm,
     },
 });
