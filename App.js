@@ -1,11 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { useFonts } from 'expo-font';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    'Montserrat': require('./assets/fonts/Montserrat-Regular.ttf'),
+    'MontserratBold': require('./assets/fonts/Montserrat-Bold.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Text style={styles.text}>Fonts Loaded!</Text>
     </View>
   );
 }
@@ -13,8 +21,13 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF', // Arka planı BEYAZ yapıyoruz
+  },
+  text: {
+    fontFamily: 'MontserratBold',
+    fontSize: 24,
+    color: '#000000', // Yazıyı SİYAH yapıyoruz
   },
 });
