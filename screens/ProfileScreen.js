@@ -49,11 +49,21 @@ export default function ProfileScreen() {
                     Mobile Developer
                 </Text>
 
+                <View style={styles.locationContainer}>
+                    <Ionicons name="location-sharp" size={16} color={currentTheme.text} style={{ opacity: 0.6 }} />
+                    <Text style={[styles.locationText, { color: currentTheme.text }]}>
+                        İstanbul, Turkey
+                    </Text>
+                </View>
+
+                <Text style={[styles.bio, { color: currentTheme.text }]}>
+                    React Native geliştiricisi. Mobil uygulamalar tasarlamayı ve kodlamayı seviyorum. 🚀
+                </Text>
+
                 <Pressable
                     style={[
                         styles.followButton,
                         {
-                            // Takip ediliyorsa çerçeveli (outline), edilmiyorsa mavi dolu buton
                             backgroundColor: isFollowing ? 'transparent' : '#2196F3',
                             borderColor: isFollowing ? currentTheme.text : 'transparent',
                             borderWidth: isFollowing ? 2 : 0,
@@ -116,6 +126,26 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: SPACING.sm,
         opacity: 0.7,
+    },
+    locationContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: SPACING.xs,
+        marginBottom: SPACING.md,
+    },
+    locationText: {
+        fontFamily: FONTS.regular,
+        fontSize: 14,
+        marginLeft: 4,
+        opacity: 0.6,
+    },
+    bio: {
+        fontFamily: FONTS.regular,
+        fontSize: 14,
+        textAlign: 'center',
+        marginHorizontal: SPACING.md,
+        opacity: 0.8,
+        lineHeight: 20,
     },
     followButton: {
         marginTop: SPACING.lg,
