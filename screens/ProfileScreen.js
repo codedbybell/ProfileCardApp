@@ -1,11 +1,17 @@
-import { View, Text, StyleSheet, Pressable, useWindowDimensions } from 'react-native';
-import { useState } from 'react';
+import { View, Text, StyleSheet, Pressable, useWindowDimensions, LayoutAnimation, Platform, UIManager } from 'react-native';
+import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADII, FONTS } from '../theme';
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function ProfileScreen() {
     const [theme, setTheme] = useState('light');
     const [isFollowing, setIsFollowing] = useState(false);
+
+    const [expanded, setExpanded] = useState(false);
 
     const currentTheme = COLORS[theme];
     const { width } = useWindowDimensions();
@@ -13,6 +19,11 @@ export default function ProfileScreen() {
 
     const toggleTheme = () => {
         setTheme(theme === 'light' ? 'dark' : 'light');
+    };
+
+    const toggleExpand = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setExpanded(!expanded);
     };
 
     return (
@@ -49,35 +60,50 @@ export default function ProfileScreen() {
                     Mobile Developer
                 </Text>
 
-                <View style={styles.locationContainer}>
-                    <Ionicons name="location-sharp" size={16} color={currentTheme.text} style={{ opacity: 0.6 }} />
-                    <Text style={[styles.locationText, { color: currentTheme.text }]}>
-                        İstanbul, Turkey
+                <Pressable onPress={toggleExpand} style={styles.expandButton}>
+                    <Text style={[styles.expandText, { color: currentTheme.text }]}>
+                        {expanded ? 'Less Details' : 'More Details'}
                     </Text>
-                </View>
-
-                <Text style={[styles.bio, { color: currentTheme.text }]}>
-                    React Native geliştiricisi. Mobil uygulamalar tasarlamayı ve kodlamayı seviyorum. 🚀
-                </Text>
-
-                <Pressable
-                    style={[
-                        styles.followButton,
-                        {
-                            backgroundColor: isFollowing ? 'transparent' : '#2196F3',
-                            borderColor: isFollowing ? currentTheme.text : 'transparent',
-                            borderWidth: isFollowing ? 2 : 0,
-                        }
-                    ]}
-                    onPress={() => setIsFollowing(!isFollowing)}
-                >
-                    <Text style={[
-                        styles.followText,
-                        { color: isFollowing ? currentTheme.text : '#FFF' }
-                    ]}>
-                        {isFollowing ? 'Following' : 'Follow'}
-                    </Text>
+                    <Ionicons
+                        name={expanded ? "chevron-up" : "chevron-down"}
+                        size={20}
+                        color={currentTheme.text}
+                    />
                 </Pressable>
+
+                {expanded && (
+                    <View style={styles.detailsContainer}>
+                        <View style={styles.locationContainer}>
+                            <Ionicons name="location-sharp" size={16} color={currentTheme.text} style={{ opacity: 0.6 }} />
+                            <Text style={[styles.locationText, { color: currentTheme.text }]}>
+                                İstanbul, Turkey
+                            </Text>
+                        </View>
+
+                        <Text style={[styles.bio, { color: currentTheme.text }]}>
+                            React Native geliştiricisi. Mobil uygulamalar tasarlamayı ve kodlamayı seviyorum. 🚀
+                        </Text>
+
+                        <Pressable
+                            style={[
+                                styles.followButton,
+                                {
+                                    backgroundColor: isFollowing ? 'transparent' : '#2196F3',
+                                    borderColor: isFollowing ? currentTheme.text : 'transparent',
+                                    borderWidth: isFollowing ? 2 : 0,
+                                }
+                            ]}
+                            onPress={() => setIsFollowing(!isFollowing)}
+                        >
+                            <Text style={[
+                                styles.followText,
+                                { color: isFollowing ? currentTheme.text : '#FFF' }
+                            ]}>
+                                {isFollowing ? 'Following' : 'Follow'}
+                            </Text>
+                        </Pressable>
+                    </View>
+                )}
 
                 <Pressable
                     style={({ pressed }) => [
@@ -127,10 +153,26 @@ const styles = StyleSheet.create({
         marginTop: SPACING.sm,
         opacity: 0.7,
     },
+    expandButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: SPACING.md,
+        padding: SPACING.sm,
+    },
+    expandText: {
+        fontFamily: FONTS.regular,
+        fontSize: 14,
+        marginRight: 4,
+        opacity: 0.6,
+    },
+    detailsContainer: {
+        alignItems: 'center',
+        width: '100%',
+    },
     locationContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: SPACING.xs,
+        marginTop: SPACING.sm,
         marginBottom: SPACING.md,
     },
     locationText: {
